@@ -1,27 +1,29 @@
 const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+var debug = require('debug')('author');
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const catalogRouter = require('./routes/catalog'); //Import routes for "catalog" area of site
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
 
-const compression = require('compression');
-const helmet = require('helmet');
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+var catalogRouter = require('./routes/catalog'); //Import routes for "catalog" area of site
 
-const app = express();
-app.use(compression()); //Compress all routes
-app.use(helmet());
+var compression = require('compression');
+var helmet = require('helmet');
+
+
+var app = express();
+
 
 // Set up mongoose connection
-const mongoose = require('mongoose');
-const dev_db_url = 'mongodb+srv://pruthvi:Chintu@123@cluster0-ltg4p.mongodb.net/test?retryWrites=true&w=majority'
-const mongoDB = process.env.MONGODB_URI || dev_db_url;
-mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true, });
+var mongoose = require('mongoose');
+var dev_db_url = 'mongodb+srv://pruthvi:Chintu@123@cluster0-ltg4p.mongodb.net/test?retryWrites=true&w=majority'
+var mongoDB = process.env.MONGODB_URI || dev_db_url;
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = global.Promise;
-const db = mongoose.connection;
+var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 
@@ -51,7 +53,7 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
+    res.locals.error = req.app.get('env') === 'production' ? err : {};
 
     // render the error page
     res.status(err.status || 500);
