@@ -12,13 +12,14 @@ const compression = require('compression');
 const helmet = require('helmet');
 
 const app = express();
-
+app.use(compression()); //Compress all routes
+app.use(helmet());
 
 // Set up mongoose connection
 const mongoose = require('mongoose');
 const dev_db_url = 'mongodb+srv://pruthvi:Chintu@123@cluster0-ltg4p.mongodb.net/test?retryWrites=true&w=majority'
 const mongoDB = process.env.MONGODB_URI || dev_db_url;
-mongoose.connect(mongoDB, { useNewUrlParser: true });
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true, });
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
